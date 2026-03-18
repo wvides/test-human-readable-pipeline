@@ -1,0 +1,25 @@
+name: Release Summary
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: "2"
+
+      - name: Generate release summary
+        id: summary
+        uses: waltervides/human-readable-post@v1
+        with:
+          provider: openai
+          api_key: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Print summary
+        env:
+          SUMMARY: ${{ steps.summary.outputs.summary }}
+        run: echo "$SUMMARY"
